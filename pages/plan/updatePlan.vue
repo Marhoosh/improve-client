@@ -33,7 +33,6 @@
 	import {
 		reactive
 	} from 'vue'
-	// import { showToast } from '@dcloudio/uni-app'
 
 	const plan = reactive({
 		name: '默认计划名称', // 假设这里是从数据库读取出来的计划
@@ -51,14 +50,39 @@
 			})
 			return
 		}
-
-		// 模拟更新逻辑
-		console.log('计划已更新:', plan)
-		uni.showToast({
-			title: '计划更新成功',
-			icon: 'success'
+		
+		// 发送请求给后端
+		uni.request({
+			url: 'https://your-api-url.com/api/plans', // 替换为你的后端接口
+			method: 'POST',
+			data: plan,
+			header: {
+				'Content-Type': 'application/json'
+			},
+			success: (res) => {
+				if (res.statusCode === 200) {
+					uni.showToast({
+						title: '计划更新成功',
+						icon: 'success'
+					})
+				} else {
+					uni.showToast({
+						title: '创建失败:' + res.data.message,
+						icon: 'none'
+					})
+				}
+			},
+			fail: (err) => {
+				uni.showToast({
+					title: '请求失败:' + err.errMsg,
+					icon: 'none'
+				})
+			}
 		})
 	}
+	
+	
+	
 </script>
 
 <style lang="scss" scoped>

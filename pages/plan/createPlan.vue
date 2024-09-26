@@ -15,12 +15,10 @@
 			<input v-model="plan.estimatedTime" placeholder="请输入预计耗时" type="number" />
 		</view>
 
-		<view class="form-group">
-			<text>计划日期:</text>
-			<picker mode="date" v-model="plan.date">
-				<view>{{ plan.date || '请选择日期' }}</view>
-			</picker>
-		</view>
+		<div class="form-group">
+			<label for="date">日期</label>
+			<input v-model="plan.date" id="date" type="date" required />
+		</div>
 
 		<button @click="createPlan">创建计划</button>
 	</view>
@@ -30,9 +28,6 @@
 	import {
 		reactive
 	} from 'vue'
-	// import {
-	// 	showToast
-	// } from '@dcloudio/uni-app'
 
 	const plan = reactive({
 		name: '',
@@ -50,17 +45,39 @@
 			return
 		}
 
-		// 模拟保存逻辑
-		console.log('计划已创建:', plan)
-		// uni.showToast({
-			
-		// })
-		uni.showToast({
-			title: '计划创建成功',
-			icon: 'success'
+		// 发送请求给后端
+		uni.request({
+			url: 'https://your-api-url.com/api/plans', // 替换为你的后端接口
+			method: 'POST',
+			data: plan,
+			header: {
+				'Content-Type': 'application/json'
+			},
+			success: (res) => {
+				if (res.statusCode === 200) {
+					uni.showToast({
+						title: '计划创建成功',
+						icon: 'success'
+					})
+					// 重置表单
+					resetForm()
+				} else {
+					uni.showToast({
+						title: '创建失败:' + res.data.message,
+						icon: 'none'
+					})
+				}
+			},
+			fail: (err) => {
+				uni.showToast({
+					title: '请求失败:' + err.errMsg,
+					icon: 'none'
+				})
+			}
 		})
+	}
 
-		// 重置表单
+	const resetForm = () => {
 		plan.name = ''
 		plan.details = ''
 		plan.estimatedTime = ''
