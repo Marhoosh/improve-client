@@ -7,12 +7,12 @@
 
 		<view class="form-group">
 			<text>计划详情:</text>
-			<textarea v-model="plan.details" placeholder="请输入计划详情"></textarea>
+			<textarea v-model="plan.detail" placeholder="请输入计划详情"></textarea>
 		</view>
 
 		<view class="form-group">
 			<text>预计耗时(小时):</text>
-			<input v-model="plan.estimatedTime" placeholder="请输入预计耗时" type="number" />
+			<input v-model="plan.expectTime" placeholder="请输入预计耗时" type="number" />
 		</view>
 
 		<div class="form-group">
@@ -31,13 +31,13 @@
 
 	const plan = reactive({
 		name: '',
-		details: '',
-		estimatedTime: '',
+		detail: '',
+		expectTime: '',
 		date: ''
 	})
 
 	const createPlan = () => {
-		if (!plan.name || !plan.details || !plan.estimatedTime || !plan.date) {
+		if (!plan.name || !plan.detail || !plan.expectTime || !plan.date) {
 			uni.showToast({
 				title: '请填写完整信息',
 				icon: 'none'
@@ -47,7 +47,7 @@
 
 		// 发送请求给后端
 		uni.request({
-			url: 'https://your-api-url.com/api/plans', // 替换为你的后端接口
+			url: 'http://localhost:80/improve/plan/add', // 替换为你的后端接口
 			method: 'POST',
 			data: plan,
 			header: {
